@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://kmevmege46c6"]
+[gd_scene load_steps=9 format=3 uid="uid://kmevmege46c6"]
 
 [ext_resource type="Material" uid="uid://d3uakirm53t5q" path="res://assets/resources/materials/greybox_1m.tres" id="1_ok242"]
 [ext_resource type="PackedScene" uid="uid://bhtsgp57yqesx" path="res://assets/entities/player/player.tscn" id="2_8tn41"]
@@ -18,6 +18,14 @@ ssao_enabled = true
 sdfgi_enabled = true
 glow_enabled = true
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_8tn41"]
+
+[sub_resource type="VoxelGeneratorNoise2D" id="VoxelGeneratorNoise2D_sf2tl"]
+noise = SubResource("FastNoiseLite_8tn41")
+height_range = 50.0
+
+[sub_resource type="VoxelMesherTransvoxel" id="VoxelMesherTransvoxel_8tn41"]
+
 [node name="MapTest" type="Node3D"]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
@@ -27,13 +35,12 @@ environment = SubResource("Environment_3fxw8")
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="CSGCombiner3D" type="CSGCombiner3D" parent="."]
-material_override = ExtResource("1_ok242")
-use_collision = true
-
-[node name="CSGBox3D" type="CSGBox3D" parent="CSGCombiner3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
-size = Vector3(15, 1, 24)
-
 [node name="Player" parent="." instance=ExtResource("2_8tn41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09826481, 1, 0.30016613)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09826481, 7.4470263, 0.30016613)
+
+[node name="VoxelViewer" type="VoxelViewer" parent="Player"]
+
+[node name="VoxelTerrain" type="VoxelTerrain" parent="."]
+material_override = ExtResource("1_ok242")
+generator = SubResource("VoxelGeneratorNoise2D_sf2tl")
+mesher = SubResource("VoxelMesherTransvoxel_8tn41")

@@ -208,9 +208,9 @@ func _state_entry(state: PlayerState, data: Dictionary = {}) -> void:
 			PlayerState.Entries.RESET_JUMPS:
 				_jumps = _max_jumps
 			
-			PlayerState.Entries.RELEASE_USABLE:
-				if %UsableManager.current_usable:
-					%UsableManager.release_usable()
+			#PlayerState.Entries.RELEASE_USABLE:
+				#if %UsableManager.current_usable:
+					#%UsableManager.release_usable()
 		pass
 	return
 
@@ -379,22 +379,22 @@ func _do_actions(act: PlayerState.Actions, event: InputEvent) -> void:
 				state_machine.transition(Trigger.JUMPED)
 				_jumps -= 1
 
-		PlayerState.Actions.USABLES:
-			if %GrabbyHand.is_grabbing():
-				if event.is_action_pressed("player.use_main"):
-					if %GrabbyHand.is_grabbing():
-						%GrabbyHand.throw(340.0)
-			elif %UsableManager.count > 0:
-				if event.is_action_pressed("player.use_main"):
-					%UsableManager.use_usable(0)
-				if event.is_action_released("player.use_main"):
-					%UsableManager.release_usable()
-			
-			if %UsableManager.count > 0 && %UsableManager.current_usable && !%UsableManager.current_usable.is_locked():
-				if event.is_action_pressed("player.hotbar_next"):
-					%UsableManager.next_usable()
-				if event.is_action_pressed("player.hotbar_prev"):
-					%UsableManager.prev_usable()
+		#PlayerState.Actions.USABLES:
+			#if %GrabbyHand.is_grabbing():
+				#if event.is_action_pressed("player.use_main"):
+					#if %GrabbyHand.is_grabbing():
+						#%GrabbyHand.throw(340.0)
+			#elif %UsableManager.count > 0:
+				#if event.is_action_pressed("player.use_main"):
+					#%UsableManager.use_usable(0)
+				#if event.is_action_released("player.use_main"):
+					#%UsableManager.release_usable()
+			#
+			#if %UsableManager.count > 0 && %UsableManager.current_usable && !%UsableManager.current_usable.is_locked():
+				#if event.is_action_pressed("player.hotbar_next"):
+					#%UsableManager.next_usable()
+				#if event.is_action_pressed("player.hotbar_prev"):
+					#%UsableManager.prev_usable()
 		
 		PlayerState.Actions.INTERACT:
 			if event.is_action_pressed("player.interact"):

@@ -1,9 +1,8 @@
-[gd_scene load_steps=28 format=3 uid="uid://bhtsgp57yqesx"]
+[gd_scene load_steps=27 format=3 uid="uid://bhtsgp57yqesx"]
 
 [ext_resource type="Script" uid="uid://dag4ml2yfo5hk" path="res://assets/entities/player/player.gd" id="1_ucweq"]
 [ext_resource type="Script" uid="uid://c7c8dbf4gjr5a" path="res://addons/swivel/scripts/swivel.gd" id="2_08t41"]
 [ext_resource type="Script" uid="uid://dtv0gpk5iy5tr" path="res://addons/input_receivers/scripts/key_input_vector.gd" id="3_1ie0h"]
-[ext_resource type="Script" uid="uid://cudkjbg3cjtwp" path="res://src/usable_manager.gd" id="3_xy2vv"]
 [ext_resource type="Script" uid="uid://b1rqvgva11iaq" path="res://addons/input_receivers/scripts/mouse_velocity_input_vector.gd" id="4_5u6hq"]
 [ext_resource type="PackedScene" uid="uid://2icbl7w0ihxh" path="res://assets/prefabs/grabby_hand.tscn" id="4_ovg4i"]
 [ext_resource type="Script" uid="uid://bf3v7koycd15q" path="res://src/quake_movement_component.gd" id="5_d4qa6"]
@@ -148,13 +147,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.4335005, 0)
 script = ExtResource("2_08t41")
 metadata/_custom_type_script = "uid://c7c8dbf4gjr5a"
 
-[node name="UsableManager" type="Node3D" parent="Swivel" node_paths=PackedStringArray("_initial_usable")]
-unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.175)
-script = ExtResource("3_xy2vv")
-_initial_usable = NodePath("")
-metadata/_custom_type_script = "uid://hurmpohm02p4"
-
 [node name="Camera3D" type="Camera3D" parent="Swivel"]
 cull_mask = 121
 current = true
@@ -228,7 +220,6 @@ metadata/_custom_type_script = "uid://dtv0gpk5iy5tr"
 unique_name_in_owner = true
 script = ExtResource("5_d4qa6")
 custom_process_integration = true
-metadata/_custom_type_script = "uid://ck25us5318jyx"
 
 [node name="StateMachine" type="Node" parent="."]
 unique_name_in_owner = true

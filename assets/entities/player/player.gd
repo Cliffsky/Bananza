@@ -24,6 +24,9 @@ enum WeaponIndex {
 	TELEGUN         = 4,
 }
 
+@export var voxel_terrain : VoxelTerrain
+@export var world : Node3D
+
 @onready var movement_input: InputVector = %MovementInputVector
 @onready var look_input: InputVector = %MouseLookInputVector
 @onready var move_component: MovementComponent3D = %QuakeMovementComponent3D
@@ -35,6 +38,13 @@ enum WeaponIndex {
 @onready var raycast_body_l: RayCast3D = %BodyRaycasts/BodyLeft
 @onready var raycast_body_m: RayCast3D = %BodyRaycasts/BodyMid
 @onready var raycast_body_r: RayCast3D = %BodyRaycasts/BodyRight
+@onready var marker_3d: Marker3D = $Swivel/Camera3D/Marker3D
+@onready var voxel_tool : VoxelTool = voxel_terrain.get_voxel_tool()
+@onready var ray_cast_3d: RayCast3D = $Swivel/Camera3D/RayCast3D
+@onready var camera_3d: Camera3D = $Swivel/Camera3D
+
+var grabbed_body : RigidBody3D = null
+const THROW_FORCE : float = 18.0
 
 var _facing_tween: Tween
 var facing_direction: Vector2:
@@ -56,7 +66,6 @@ var _max_dashes: int = 3:
 		_max_dashes = v
 		_dashes = v
 
-
 var _batjump_timer: SceneTreeTimer
 
 var _walls_on_sides: bool = false
@@ -68,6 +77,7 @@ var _has_wallrun: bool = true
 const SCENE_PATH_PISTOL = "uid://bjjhkb86mk45j"
 const SCENE_PATH_SHOTGUN = "uid://cfr1hc65nmkqs"
 const SCENE_PATH_ROCKET_LAUNCHER = "uid://c8dodjemgjswr"
+const TERRAIN_UNIT = preload("uid://d062onkv4du5i")
 func _enter_tree() -> void:
 	if is_node_ready(): return
 	
@@ -125,14 +135,67 @@ func _physics_process(delta: float) -> void:
 	%BodyRaycasts.rotation.y = facing_direction.x
 
 	state_machine.process_states(delta)
+	
+	if grabbed_body:
+		var target_transform = grabbed_body.global_transform
+		target_transform.origin = marker_3d.global_transform.origin
+		grabbed_body.global_transform = target_transform
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if look_input is MouseVelocityInputVector && event.is_action_pressed("debug.toggle_mouse"):
 			look_input.mouse_captured = false if Input.mouse_mode == Input.MouseMode.MOUSE_MODE_CAPTURED else true
-	
+	if Input.is_action_just_pressed("dig"):
+		if grabbed_body:
+			var _grabbed_body := grabbed_body
+			release_grabbed_body()
+			var dir := -camera_3d.global_transform.basis.z
+			_grabbed_body.apply_central_impulse(dir * THROW_FORCE)
+		else:
+			var collider : VoxelRaycastResult = voxel_tool.raycast(global_position, marker_3d.global_position - global_position, 2.0)
+			voxel_tool.mode = VoxelTool.MODE_REMOVE
+			voxel_tool.do_sphere(marker_3d.global_position, 2.0)
+			if collider:
+				var terrain_unit = TERRAIN_UNIT.instantiate()
+				terrain_unit.global_position = marker_3d.global_position
+				world.add_child(terrain_unit)
+	elif Input.is_action_pressed("grab"):
+		if not grabbed_body:
+			var collider = ray_cast_3d.get_collider()
+			if collider and collider is RigidBody3D:
+				grabbed_body = collider
+				grabbed_body.freeze = true
+				var mesh = grabbed_body.mesh_instance_3d
+				for i in range(mesh.get_surface_override_material_count()):
+					var mat : StandardMaterial3D = mesh.get_surface_override_material(i)
+					if mat and mat is StandardMaterial3D:
+						mat = mat.duplicate()
+						var color := mat.albedo_color
+						color.a = 0.5
+						mat.albedo_color = color
+						mesh.set_surface_override_material(i, mat)
+	elif Input.is_action_just_released("grab"):
+		for child in marker_3d.get_children():
+			if child is RigidBody3D:
+				grabbed_body = child
+			break  # TODO: Place assert to ensure only 1 child
+		if grabbed_body:
+			release_grabbed_body()
 	_state_input(event)
 
+func release_grabbed_body():
+	grabbed_body.freeze = false
+	# Restore alpha
+	var mesh = grabbed_body.mesh_instance_3d
+	for i in range(mesh.get_surface_override_material_count()):
+		var mat : StandardMaterial3D = mesh.get_surface_override_material(i)
+		if mat and mat is StandardMaterial3D:
+			mat = mat.duplicate()
+			var color := mat.albedo_color
+			color.a = 1
+			mat.albedo_color = color
+			mesh.set_surface_override_material(i, mat)
+	grabbed_body = null
 
 ###############################################
 # Public functions

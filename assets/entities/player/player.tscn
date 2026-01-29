@@ -151,6 +151,13 @@ metadata/_custom_type_script = "uid://c7c8dbf4gjr5a"
 cull_mask = 121
 current = true
 
+[node name="Marker3D" type="Marker3D" parent="Swivel/Camera3D"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -2)
+
+[node name="RayCast3D" type="RayCast3D" parent="Swivel/Camera3D"]
+target_position = Vector3(0, 0, -2)
+collision_mask = 8
+
 [node name="GrabbyHand" parent="Swivel" instance=ExtResource("4_ovg4i")]
 unique_name_in_owner = true
 transform = Transform3D(-1, 0, -1.509958e-07, 0, 1, 0, 1.509958e-07, 0, -1, 0, 0, 0)

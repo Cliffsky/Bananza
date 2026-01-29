@@ -1,0 +1,56 @@
+[gd_scene load_steps=3 format=3 uid="uid://bkckquawa1nlo"]
+
+[ext_resource type="Script" uid="uid://3d6j2bjbsl2g" path="res://assets/ui/view_map.gd" id="1_rjvio"]
+[ext_resource type="Texture2D" uid="uid://0lxtn2u6v0we" path="res://icon.svg" id="1_xwk84"]
+
+[node name="MapView" type="SubViewportContainer"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+stretch = true
+script = ExtResource("1_rjvio")
+
+[node name="SubViewport" type="SubViewport" parent="."]
+transparent_bg = true
+handle_input_locally = false
+gui_disable_input = true
+canvas_cull_mask = 2147483647
+size = Vector2i(1152, 648)
+render_target_update_mode = 4
+
+[node name="MinimapCamera" type="Camera3D" parent="SubViewport"]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 7)
+cull_mask = 128
+projection = 1
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="SubViewport/MinimapCamera"]
+transform = Transform3D(0.70710677, -0.49999997, 0.49999997, 0, 0.70710677, 0.70710677, -0.70710677, -0.49999997, 0.49999997, 0, 0, -7)
+layers = 128
+light_cull_mask = 128
+directional_shadow_mode = 0
+
+[node name="DirectionalLight3D2" type="DirectionalLight3D" parent="SubViewport/MinimapCamera"]
+transform = Transform3D(-0.4999999, -0.61237246, 0.6123725, 0, 0.7071068, 0.70710677, -0.86602545, 0.35355332, -0.35355335, 0, 0, -7)
+visible = false
+layers = 128
+light_energy = 0.7
+light_cull_mask = 128
+directional_shadow_mode = 0
+
+[node name="DirectionalLight3D3" type="DirectionalLight3D" parent="SubViewport/MinimapCamera"]
+transform = Transform3D(0.22414398, -0.7745192, -0.59150624, 0.49999997, 0.61237246, -0.6123725, 0.83651626, -0.15849349, 0.52451915, 0, 0, -7)
+visible = false
+layers = 128
+light_energy = 0.25
+light_cull_mask = 128
+directional_shadow_mode = 0
+
+[node name="MinimapOrigin" type="Sprite3D" parent="SubViewport"]
+unique_name_in_owner = true
+visible = false
+layers = 128
+billboard = 1
+texture = ExtResource("1_xwk84")

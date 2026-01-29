@@ -1,0 +1,27 @@
+[gd_scene load_steps=4 format=3 uid="uid://2icbl7w0ihxh"]
+
+[ext_resource type="Script" uid="uid://wr26fr0rvs4y" path="res://assets/prefabs/grabby_hand.gd" id="1_70siy"]
+[ext_resource type="Texture2D" uid="uid://0lxtn2u6v0we" path="res://icon.svg" id="1_e38tp"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_70siy"]
+radius = 0.1
+
+[node name="GrabbyHand" type="SpringArm3D"]
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 0, 0)
+collision_mask = 27
+spring_length = 3.0
+script = ExtResource("1_70siy")
+
+[node name="Hand" type="ShapeCast3D" parent="."]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 3)
+shape = SubResource("SphereShape3D_70siy")
+target_position = Vector3(0, 0, 0)
+collision_mask = 32
+collide_with_areas = true
+
+[node name="Sprite3D" type="Sprite3D" parent="Hand"]
+visible = false
+pixel_size = 0.0026
+no_depth_test = true
+texture = ExtResource("1_e38tp")

@@ -140,3 +140,7 @@ grab={
 3d_physics/layer_4="Prop Entities"
 3d_physics/layer_5="Misc Entities"
 3d_physics/layer_6="Grabbables"
+
+[physics]
+
+common/physics_interpolation=true

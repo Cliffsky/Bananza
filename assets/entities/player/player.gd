@@ -145,7 +145,7 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventKey:
 		if look_input is MouseVelocityInputVector && event.is_action_pressed("debug.toggle_mouse"):
 			look_input.mouse_captured = false if Input.mouse_mode == Input.MouseMode.MOUSE_MODE_CAPTURED else true
-	if Input.is_action_just_pressed("dig"):
+	if Input.is_action_just_pressed("player.dig"):
 		if grabbed_body:
 			var _grabbed_body := grabbed_body
 			release_grabbed_body()
@@ -159,7 +159,7 @@ func _input(event: InputEvent) -> void:
 				var terrain_unit = TERRAIN_UNIT.instantiate()
 				terrain_unit.global_position = marker_3d.global_position
 				world.add_child(terrain_unit)
-	elif Input.is_action_pressed("grab"):
+	elif Input.is_action_pressed("player.grab"):
 		if not grabbed_body:
 			var collider = ray_cast_3d.get_collider()
 			if collider and collider is RigidBody3D:
@@ -174,7 +174,7 @@ func _input(event: InputEvent) -> void:
 						color.a = 0.5
 						mat.albedo_color = color
 						mesh.set_surface_override_material(i, mat)
-	elif Input.is_action_just_released("grab"):
+	elif Input.is_action_just_released("player.grab"):
 		for child in marker_3d.get_children():
 			if child is RigidBody3D:
 				grabbed_body = child

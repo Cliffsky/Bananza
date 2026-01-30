@@ -15,6 +15,10 @@ run/main_scene="uid://kmevmege46c6"
 config/features=PackedStringArray("4.5", "Forward Plus")
 config/icon="res://icon.svg"
 
+[editor_plugins]
+
+enabled=PackedStringArray("res://addons/aos_health/plugin.cfg", "res://addons/input_receivers/plugin.cfg", "res://addons/state_o_things/plugin.cfg", "res://addons/swivel/plugin.cfg")
+
 [input]
 
 player.move_left={

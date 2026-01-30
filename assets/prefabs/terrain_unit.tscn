@@ -1,0 +1,25 @@
+[gd_scene load_steps=6 format=3 uid="uid://d062onkv4du5i"]
+
+[ext_resource type="Script" uid="uid://b3vvihwh06a87" path="res://assets/prefabs/terrain_unit.gd" id="1_a06ic"]
+[ext_resource type="Texture2D" uid="uid://0lxtn2u6v0we" path="res://icon.svg" id="1_byrdg"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_a06ic"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_o5q52"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_58glv"]
+transparency = 1
+albedo_texture = ExtResource("1_byrdg")
+uv1_triplanar = true
+
+[node name="TerrainUnit" type="RigidBody3D"]
+collision_layer = 9
+freeze_mode = 1
+script = ExtResource("1_a06ic")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("SphereShape3D_a06ic")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("SphereMesh_o5q52")
+surface_material_override/0 = SubResource("StandardMaterial3D_58glv")

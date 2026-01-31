@@ -1,6 +1,6 @@
 [gd_scene load_steps=6 format=3 uid="uid://d062onkv4du5i"]
 
-[ext_resource type="Script" uid="uid://b3vvihwh06a87" path="res://assets/prefabs/terrain_unit.gd" id="1_a06ic"]
+[ext_resource type="Script" uid="uid://d7hf70ea0xm7" path="res://assets/prefabs/terrain_unit.gd" id="1_a06ic"]
 [ext_resource type="Texture2D" uid="uid://0lxtn2u6v0we" path="res://icon.svg" id="1_byrdg"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_a06ic"]
@@ -13,7 +13,7 @@ albedo_texture = ExtResource("1_byrdg")
 uv1_triplanar = true
 
 [node name="TerrainUnit" type="RigidBody3D"]
-collision_layer = 9
+collision_layer = 16
 freeze_mode = 1
 script = ExtResource("1_a06ic")
 

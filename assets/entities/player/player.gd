@@ -140,6 +140,7 @@ func _physics_process(delta: float) -> void:
 		var target_transform = grabbed_body.global_transform
 		target_transform.origin = marker_3d.global_transform.origin
 		grabbed_body.global_transform = target_transform
+	get_tree().call_group("enemies", "update_target_location", global_transform.origin)
 
 func _input(event: InputEvent) -> void:
 	if event is InputEventKey:

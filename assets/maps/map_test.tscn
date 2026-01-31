@@ -1,5 +1,6 @@
-[gd_scene load_steps=9 format=3 uid="uid://kmevmege46c6"]
+[gd_scene load_steps=10 format=3 uid="uid://kmevmege46c6"]
 
+[ext_resource type="Script" uid="uid://cu1w8vhwxnp4w" path="res://assets/maps/map_test.gd" id="1_3fxw8"]
 [ext_resource type="Material" uid="uid://d3uakirm53t5q" path="res://assets/resources/materials/greybox_1m.tres" id="1_ok242"]
 [ext_resource type="PackedScene" uid="uid://bhtsgp57yqesx" path="res://assets/entities/player/player.tscn" id="2_8tn41"]
 
@@ -27,6 +28,7 @@ height_range = 50.0
 [sub_resource type="VoxelMesherTransvoxel" id="VoxelMesherTransvoxel_8tn41"]
 
 [node name="MapTest" type="Node3D"]
+script = ExtResource("1_3fxw8")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3fxw8")
@@ -46,3 +48,9 @@ world = NodePath("..")
 material_override = ExtResource("1_ok242")
 generator = SubResource("VoxelGeneratorNoise2D_sf2tl")
 mesher = SubResource("VoxelMesherTransvoxel_8tn41")
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

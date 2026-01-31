@@ -140,3 +140,9 @@ grab={
 3d_physics/layer_4="Prop Entities"
 3d_physics/layer_5="Misc Entities"
 3d_physics/layer_6="Grabbables"
+
+[physics]
+
+3d/physics_engine="Jolt Physics"
+jolt_physics_3d/simulation/velocity_steps=50
+jolt_physics_3d/simulation/position_steps=30

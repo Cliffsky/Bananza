@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://kmevmege46c6"]
+[gd_scene load_steps=13 format=3 uid="uid://kmevmege46c6"]
 
 [ext_resource type="Script" uid="uid://cu1w8vhwxnp4w" path="res://assets/maps/map_test.gd" id="1_3fxw8"]
 [ext_resource type="Material" uid="uid://d3uakirm53t5q" path="res://assets/resources/materials/greybox_1m.tres" id="1_ok242"]
@@ -21,11 +21,22 @@ glow_enabled = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_8tn41"]
 
-[sub_resource type="VoxelGeneratorNoise2D" id="VoxelGeneratorNoise2D_sf2tl"]
+[sub_resource type="VoxelGeneratorNoise" id="VoxelGeneratorNoise_sf2tl"]
+channel = 0
 noise = SubResource("FastNoiseLite_8tn41")
-height_range = 50.0
 
-[sub_resource type="VoxelMesherTransvoxel" id="VoxelMesherTransvoxel_8tn41"]
+[sub_resource type="VoxelBlockyModelEmpty" id="VoxelBlockyModelEmpty_8tn41"]
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_sf2tl"]
+material_override_0 = ExtResource("1_ok242")
+
+[sub_resource type="VoxelBlockyLibrary" id="VoxelBlockyLibrary_3fxw8"]
+models = Array[VoxelBlockyModel]([SubResource("VoxelBlockyModelEmpty_8tn41"), SubResource("VoxelBlockyModelCube_sf2tl")])
+
+[sub_resource type="VoxelMesherBlocky" id="VoxelMesherBlocky_4ddvk"]
+library = SubResource("VoxelBlockyLibrary_3fxw8")
+
+[sub_resource type="VoxelFormat" id="VoxelFormat_8tn41"]
 
 [node name="MapTest" type="Node3D"]
 script = ExtResource("1_3fxw8")
@@ -38,19 +49,15 @@ transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545
 shadow_enabled = true
 
 [node name="Player" parent="." node_paths=PackedStringArray("voxel_terrain", "world") instance=ExtResource("2_8tn41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09826481, 7.4470263, 0.30016613)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09826481, 44.50021, 0.30016613)
 voxel_terrain = NodePath("../VoxelTerrain")
 world = NodePath("..")
 
 [node name="VoxelViewer" type="VoxelViewer" parent="Player"]
 
 [node name="VoxelTerrain" type="VoxelTerrain" parent="."]
-material_override = ExtResource("1_ok242")
-generator = SubResource("VoxelGeneratorNoise2D_sf2tl")
-mesher = SubResource("VoxelMesherTransvoxel_8tn41")
-
-[node name="Timer" type="Timer" parent="."]
-wait_time = 3.0
-autostart = true
-
-[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+generator = SubResource("VoxelGeneratorNoise_sf2tl")
+mesher = SubResource("VoxelMesherBlocky_4ddvk")
+format = SubResource("VoxelFormat_8tn41")
+gi_mode = 2
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.5)

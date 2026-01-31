@@ -92,3 +92,6 @@ script = ExtResource("6_enlid")
 mouse_visible = false
 mouse_captured = true
 metadata/_custom_type_script = "uid://b1rqvgva11iaq"
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 24.693262, -5.062395)

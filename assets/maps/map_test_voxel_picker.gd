@@ -2,6 +2,9 @@ extends Node3D
 
 const SPEED = 10.0
 
+func _ready() -> void:
+	$MeshInstance3D.mesh = VoxelPicker._create_cube_mesh(1.0)
+
 func _process(delta: float) -> void:	
 	%Thing.position += Basis(Vector3.UP, %Thing.rotation.y) * %KeyInputVector.xyz * delta * SPEED
 	%Thing.directional_velocity = %MouseVelocityInputVector.xy

@@ -19,7 +19,7 @@ background_mode = 2
 sky = SubResource("Sky_sf2tl")
 tonemap_mode = 2
 ssao_enabled = true
-sdfgi_enabled = true
+ssil_enabled = true
 glow_enabled = true
 
 [sub_resource type="FastNoiseLite" id="FastNoiseLite_8tn41"]

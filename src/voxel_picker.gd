@@ -8,34 +8,47 @@ func peek(origin: Vector3, radius: float) -> PackedInt32Array:
 	var arr: Array[int]
 	var diameter: int = floori(radius) * 2
 	var i_origin: Vector3i = Vector3i(origin)
-	for xoff: int in range(diameter):
+	for zoff: int in range(diameter):	# X, then Y, then Z. It's easier to visualize
 		for yoff: int in range(diameter):
-			for zoff: int in range(diameter):
+			for xoff: int in range(diameter):
 				var v_off: Vector3i = Vector3i(xoff,yoff,zoff) - Vector3i.ONE * floori(radius)
 				var peek_v: Vector3i = i_origin + v_off
-				arr.append(voxel_tool.get_voxel(peek_v))
+				if i_origin.distance_to(peek_v) <= radius:
+					arr.append(voxel_tool.get_voxel(peek_v))
+				else:
+					arr.append(-1)
 	
 	return PackedInt32Array(arr)
 
 # I'm thinking this should create an ArrayMesh made of all the voxels passed into the function
 #  ...exactly what the function says it does
-func create_mesh_from_voxels(types: PackedInt32Array) -> void:
+func create_mesh_from_voxels(types: PackedInt32Array, transform: Transform3D) -> ArrayMesh:
 	assert(voxel_terrain)
 	assert(voxel_terrain.mesher)
-	if voxel_terrain.mesher is VoxelMesherBlocky:
-		assert(voxel_terrain.mesher.library)
-		var array_meshes: Array[ArrayMesh] = []
-		for t: int in types:
-			var model: VoxelBlockyModel = voxel_terrain.mesher.library.models[t]
-			match model:
-				VoxelBlockyModelCube:
-					var mesh = _create_cube_mesh(1.0)
-					array_meshes.append(mesh)
-		pass
-	pass
+	assert(voxel_terrain.mesher is VoxelMesherBlocky)
+	assert(voxel_terrain.mesher.library)
+	assert(voxel_terrain.mesher.library is VoxelBlockyLibrary)
+	var library: VoxelBlockyLibrary = voxel_terrain.mesher.library
+	var array_meshes: Array[ArrayMesh] = []
+	for i: int in range(types.size()):
+		var t: int = types[i]
+		if t < 0: pass
+		var model: VoxelBlockyModel = library.models[t]
+		var diameter: int = floori(pow(types.size(), 1.0/3.0))
+		var voff: Vector3 = Vector3(i % diameter, (i / diameter) % diameter, i / diameter / diameter)
+		if model is VoxelBlockyModelCube:
+			var mesh = _create_cube_mesh(1.0, voff)	# I could probably just create a BoxMesh and turn it into an ArrayMesh... somehow
+			array_meshes.append(mesh)
+		if model is VoxelBlockyModelMesh:
+			var mesh = ArrayMesh.new()
+			var surface_array = []
+			surface_array.resize(Mesh.ARRAY_MAX)
+			surface_array[Mesh.ARRAY_VERTEX] = model.mesh.get_faces()
+	var aggregation: ArrayMesh = _combine_array_meshes(array_meshes)
+	return aggregation
 
 # Generated (partially) by Claude Sonnet 4.5 [TESTED]
-static func _create_cube_mesh(size: float) -> ArrayMesh:
+static func _create_cube_mesh(size: float, offset: Vector3 = Vector3.ZERO) -> ArrayMesh:
 	var half_size = size / 2.0
 	var min_pos = -half_size
 	var max_pos = half_size
@@ -47,15 +60,15 @@ static func _create_cube_mesh(size: float) -> ArrayMesh:
 	#  face culling, I still don't know why this works.
 	var vertices = PackedVector3Array([
 		# Back face
-		Vector3(min_pos, min_pos, min_pos),  # 0
-		Vector3(max_pos, min_pos, min_pos),  # 1
-		Vector3(max_pos, max_pos, min_pos),  # 2
-		Vector3(min_pos, max_pos, min_pos),  # 3
+		offset + Vector3(min_pos, min_pos, min_pos),  # 0
+		offset + Vector3(max_pos, min_pos, min_pos),  # 1
+		offset + Vector3(max_pos, max_pos, min_pos),  # 2
+		offset + Vector3(min_pos, max_pos, min_pos),  # 3
 		# Front face
-		Vector3(min_pos, min_pos, max_pos),  # 4
-		Vector3(max_pos, min_pos, max_pos),  # 5
-		Vector3(max_pos, max_pos, max_pos),  # 6
-		Vector3(min_pos, max_pos, max_pos),  # 7
+		offset + Vector3(min_pos, min_pos, max_pos),  # 4
+		offset + Vector3(max_pos, min_pos, max_pos),  # 5
+		offset + Vector3(max_pos, max_pos, max_pos),  # 6
+		offset + Vector3(min_pos, max_pos, max_pos),  # 7
 	])
 	
 	# Define the indices for the 12 triangles (2 per face, 6 faces)

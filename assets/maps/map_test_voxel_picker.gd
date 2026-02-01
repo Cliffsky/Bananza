@@ -15,5 +15,7 @@ func _input(event: InputEvent) -> void:
 		%MouseVelocityInputVector.mouse_visible = !%MouseVelocityInputVector.mouse_visible
 	if event is InputEventMouseButton && event.is_action_pressed("player.dig"):
 		if %Thing/RayCast3D.is_colliding():
-			var result = %Thing/VoxelPicker.peek(%Thing/RayCast3D.get_collision_point(), 3.0)
-			print(result)
+			var result = %Thing/VoxelPicker.peek(%Thing/RayCast3D.get_collision_point(), 5.0)
+			#($MeshInstance3D as MeshInstance3D).mesh.free()
+			$MeshInstance3D.mesh = %Thing/VoxelPicker.create_mesh_from_voxels(result, Transform3D.IDENTITY)
+			#%Thing/VoxelPicker.create_mesh_from_voxels(result, Transform3D.IDENTITY)

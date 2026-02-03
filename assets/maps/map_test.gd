@@ -1,13 +1,18 @@
 extends Node3D
 
 const ENEMY = preload("uid://bwxat71yiyqir")
+const TERRAIN_DEBRIS = preload("uid://dfim2u8qvls45")
 
-@onready var player: Player = $Player
+@export var player : CharacterBody3D = null
 
 @export var spawn_radius := 50.0
 @export var ray_height := 200.0
 @export var max_attempts := 10
 @export var terrain_collision_mask := 1 << 0 # layer 1
+
+func _ready():
+	if player:
+		player.voxel_deleted.connect(on_voxel_deleted)
 
 func _on_timer_timeout() -> void:
 	var spawn_pos := get_random_ground_position()
@@ -37,3 +42,10 @@ func get_random_ground_position() -> Vector3:
 			return result.position + Vector3.UP * 0.1
 
 	return Vector3.ZERO
+
+func on_voxel_deleted(pos : Vector3):
+	var debris = TERRAIN_DEBRIS.instantiate()
+	add_child(debris)
+	debris.global_transform.origin = pos + Vector3(1, .5, 1)
+	debris.emitting = true
+	debris.finished.connect(debris.queue_free)

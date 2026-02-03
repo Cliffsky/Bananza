@@ -1,8 +1,8 @@
-[gd_scene load_steps=13 format=3 uid="uid://kmevmege46c6"]
+[gd_scene load_steps=14 format=3 uid="uid://kmevmege46c6"]
 
 [ext_resource type="Script" uid="uid://cu1w8vhwxnp4w" path="res://assets/maps/map_test.gd" id="1_3fxw8"]
 [ext_resource type="Material" uid="uid://d3uakirm53t5q" path="res://assets/resources/materials/greybox_1m.tres" id="1_ok242"]
-[ext_resource type="PackedScene" uid="uid://bhtsgp57yqesx" path="res://assets/entities/player/player.tscn" id="2_8tn41"]
+[ext_resource type="PackedScene" uid="uid://bwdj68bit8rhf" path="res://assets/entities/player/player_3rd_person.tscn" id="3_sf2tl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8tn41"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -38,8 +38,9 @@ library = SubResource("VoxelBlockyLibrary_3fxw8")
 
 [sub_resource type="VoxelFormat" id="VoxelFormat_8tn41"]
 
-[node name="MapTest" type="Node3D"]
+[node name="MapTest" type="Node3D" node_paths=PackedStringArray("player")]
 script = ExtResource("1_3fxw8")
+player = NodePath("Mutant")
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3fxw8")
@@ -48,16 +49,22 @@ environment = SubResource("Environment_3fxw8")
 transform = Transform3D(-0.8660254, -0.43301278, 0.25, 0, 0.49999997, 0.86602545, -0.50000006, 0.75, -0.43301266, 0, 0, 0)
 shadow_enabled = true
 
-[node name="Player" parent="." node_paths=PackedStringArray("voxel_terrain", "world") instance=ExtResource("2_8tn41")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.09826481, 44.50021, 0.30016613)
-voxel_terrain = NodePath("../VoxelTerrain")
-world = NodePath("..")
-
-[node name="VoxelViewer" type="VoxelViewer" parent="Player"]
-
 [node name="VoxelTerrain" type="VoxelTerrain" parent="."]
 generator = SubResource("VoxelGeneratorNoise_sf2tl")
 mesher = SubResource("VoxelMesherBlocky_4ddvk")
 format = SubResource("VoxelFormat_8tn41")
 gi_mode = 2
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0, 0.5)
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="Mutant" parent="." node_paths=PackedStringArray("voxel_terrain", "world") instance=ExtResource("3_sf2tl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.320799, 1.1019669, 15)
+voxel_terrain = NodePath("../VoxelTerrain")
+world = NodePath("..")
+
+[node name="VoxelViewer" type="VoxelViewer" parent="Mutant"]
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

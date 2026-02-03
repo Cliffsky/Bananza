@@ -1,0 +1,44 @@
+[gd_scene load_steps=9 format=3 uid="uid://dfim2u8qvls45"]
+
+[ext_resource type="Shader" uid="uid://dvw02juhav4th" path="res://assets/resources/shaders/sparks.tres" id="3_8eg2u"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cit25"]
+render_priority = 0
+shader = ExtResource("3_8eg2u")
+
+[sub_resource type="Curve" id="Curve_cit25"]
+_data = [Vector2(0, 1), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_ci4d5"]
+curve = SubResource("Curve_cit25")
+
+[sub_resource type="Gradient" id="Gradient_ci4d5"]
+colors = PackedColorArray(2.454227, 2.454227, 2.454227, 1, 1, 1, 1, 1)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_04wbb"]
+gradient = SubResource("Gradient_ci4d5")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_ci4d5"]
+particle_flag_align_y = true
+direction = Vector3(1, 1, 0)
+spread = 180.0
+initial_velocity_min = 4.0
+initial_velocity_max = 8.0
+scale_min = 0.099999994
+scale_max = 0.19999999
+color_ramp = SubResource("GradientTexture1D_04wbb")
+alpha_curve = SubResource("CurveTexture_ci4d5")
+
+[sub_resource type="BoxMesh" id="BoxMesh_8uidm"]
+
+[node name="Sparks" type="GPUParticles3D"]
+layers = 4
+material_override = SubResource("ShaderMaterial_cit25")
+emitting = false
+amount = 32
+lifetime = 0.25
+one_shot = true
+explosiveness = 1.0
+process_material = SubResource("ParticleProcessMaterial_ci4d5")
+draw_pass_1 = SubResource("BoxMesh_8uidm")

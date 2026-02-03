@@ -3,11 +3,13 @@ class_name Enemy
 
 @export var world: Node
 
+@onready var mesh_instance_3d: MeshInstance3D = $enemy/Armature/Skeleton3D/MeshInstance3D
 @onready var animation_player: AnimationPlayer = $enemy/AnimationPlayer
 @onready var animation_tree: AnimationTree = $AnimationTree
 @onready var armature: Node3D = $enemy/Armature
 @onready var physical_bone_simulator: PhysicalBoneSimulator3D = \
 	$enemy/Armature/Skeleton3D/PhysicalBoneSimulator3D
+@onready var timer: Timer = $Timer
 
 enum ImpState {
 	DEFAULT,
@@ -20,10 +22,24 @@ const ATTACK_RANGE := 5.0
 const SPEED := 1.5
 const ROTATION_LERP := 1.5
 
-var state: ImpState = ImpState.DEFAULT
+var state: ImpState = ImpState.DEFAULT : 
+	set(value):
+		if value == state: return
+		state = value
+		if state == ImpState.DEAD:
+			timer.start()
+			animation_player.active = false
+			animation_tree.active = false
+
 var has_reached_target := false
 var player_pos: Vector3 = Vector3.ZERO
 var gravity = ProjectSettings.get_setting("physics/3d/default_gravity")
+
+func _ready():
+	# For despawn animation - see _on_timer_timeout
+	var mat := mesh_instance_3d.get_surface_override_material(0)
+	if mat:
+		mesh_instance_3d.set_surface_override_material(0, mat.duplicate())
 
 func _physics_process(delta: float) -> void:
 	if state == ImpState.DEAD:
@@ -104,6 +120,7 @@ func _update_animation() -> void:
 # --------------------------------------------------------------------
 
 func _on_target_reached() -> void:
+	if state == ImpState.DEAD: return
 	animation_tree.active = false
 	animation_player.play("shoot")
 
@@ -118,6 +135,35 @@ func spawn_projectile() -> void:
 
 	world.add_child(projectile)
 
-func _on_area_3d_body_entered(_body: Node3D) -> void:
+func _on_area_3d_body_entered(body: Node3D) -> void:
+	on_violent_contact(body)
+
+
+func _on_area_3d_area_entered(area: Area3D) -> void:
+	on_violent_contact(area)
+
+func on_violent_contact(collider) -> void:
 	state = ImpState.DEAD
 	physical_bone_simulator.physical_bones_start_simulation()
+
+	var force := 18.0
+	var hit_pos = collider.global_position
+
+	for bone in physical_bone_simulator.get_children():
+		if bone is PhysicalBone3D:
+			var dir = (bone.global_position - hit_pos).normalized()
+			bone.apply_impulse(dir * force)
+
+
+func _on_timer_timeout() -> void:
+	var tween = create_tween()
+	var mat := mesh_instance_3d.get_active_material(0) as StandardMaterial3D
+	if not mat:
+		return
+
+	# Tween the alpha from current to 0
+	tween.tween_property(mat, "albedo_color:a", 0.0, 1.5)
+	tween.play()
+
+	# Optionally queue_free after fade
+	tween.finished.connect(queue_free)

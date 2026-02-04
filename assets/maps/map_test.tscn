@@ -1,8 +1,10 @@
-[gd_scene load_steps=14 format=3 uid="uid://kmevmege46c6"]
+[gd_scene load_steps=21 format=3 uid="uid://kmevmege46c6"]
 
 [ext_resource type="Script" uid="uid://cu1w8vhwxnp4w" path="res://assets/maps/map_test.gd" id="1_3fxw8"]
-[ext_resource type="Material" uid="uid://d3uakirm53t5q" path="res://assets/resources/materials/greybox_1m.tres" id="1_ok242"]
+[ext_resource type="Texture2D" uid="uid://6aikxchkf06o" path="res://assets/textures/grass.png" id="2_sf2tl"]
+[ext_resource type="Texture2D" uid="uid://bl7k3ku5qogfm" path="res://assets/textures/dirt.png" id="3_3fxw8"]
 [ext_resource type="PackedScene" uid="uid://bwdj68bit8rhf" path="res://assets/entities/player/player_3rd_person.tscn" id="3_sf2tl"]
+[ext_resource type="Texture2D" uid="uid://b7g18lrfq4njy" path="res://assets/textures/stone.png" id="4_4ddvk"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_8tn41"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -27,11 +29,32 @@ noise = SubResource("FastNoiseLite_8tn41")
 
 [sub_resource type="VoxelBlockyModelEmpty" id="VoxelBlockyModelEmpty_8tn41"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3fxw8"]
+albedo_texture = ExtResource("2_sf2tl")
+uv1_triplanar = true
+texture_filter = 0
+
 [sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_sf2tl"]
-material_override_0 = ExtResource("1_ok242")
+material_override_0 = SubResource("StandardMaterial3D_3fxw8")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_4ddvk"]
+albedo_texture = ExtResource("3_3fxw8")
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_201lu"]
+material_override_0 = SubResource("StandardMaterial3D_4ddvk")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_201lu"]
+albedo_texture = ExtResource("4_4ddvk")
+uv1_triplanar = true
+texture_filter = 0
+
+[sub_resource type="VoxelBlockyModelCube" id="VoxelBlockyModelCube_nnd3a"]
+material_override_0 = SubResource("StandardMaterial3D_201lu")
 
 [sub_resource type="VoxelBlockyLibrary" id="VoxelBlockyLibrary_3fxw8"]
-models = Array[VoxelBlockyModel]([SubResource("VoxelBlockyModelEmpty_8tn41"), SubResource("VoxelBlockyModelCube_sf2tl")])
+models = Array[VoxelBlockyModel]([SubResource("VoxelBlockyModelEmpty_8tn41"), SubResource("VoxelBlockyModelCube_sf2tl"), SubResource("VoxelBlockyModelCube_201lu"), SubResource("VoxelBlockyModelCube_nnd3a")])
 
 [sub_resource type="VoxelMesherBlocky" id="VoxelMesherBlocky_4ddvk"]
 library = SubResource("VoxelBlockyLibrary_3fxw8")
